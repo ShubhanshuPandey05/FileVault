@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const uploadRoute = require('./routes/upload.js');
 const downloadRoute = require('./routes/download.js');
-const roomRoute = require('./routes/Room.js');
+const roomRoute = require('./routes/room.js');
 const port = process.env.PORT || 8001;
 const app = express();
 app.use(cors());

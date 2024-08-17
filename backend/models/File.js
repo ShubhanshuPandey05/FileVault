@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const fileSchema = new mongoose.Schema({
   filename: { type: String, required: true },
   url: { type: String, required: true },
-  cloudinary_id: { type: String, required: true },
-  roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' }
+  roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
 });
 
 const File = mongoose.model('File', fileSchema);

@@ -9,7 +9,7 @@ function Home() {
 
   const handleCreateRoom = async () => {
     try {
-      const response = await axios.get('https://image-vault-psi.vercel.app/room/create');
+      const response = await axios.get('http://localhost:5000/room/create');
       if (response.status === 201) {
         navigate(`/room/${response.data.roomId}`);
       } else {
@@ -24,7 +24,7 @@ function Home() {
   const handleJoinRoom = async () => {
     if (roomId.trim()) {
       try {
-        const response = await axios.get(`https://image-vault-psi.vercel.app/room/${roomId}`);
+        const response = await axios.get(`http://localhost:5000/room/${roomId}`);
         if (response.status === 200) {
           navigate(`/room/${roomId}`);
         } else {

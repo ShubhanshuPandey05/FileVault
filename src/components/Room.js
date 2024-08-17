@@ -41,7 +41,7 @@ function Room() {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`https://image-vault-psi.vercel.app/upload/${roomId}`, {
+      const response = await fetch(`http://localhost:5000/upload/${roomId}`, {
         method: 'POST',
         body: formData,
       });

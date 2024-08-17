@@ -8,7 +8,7 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await axios.get(`https://image-vault-psi.vercel.app/room/${roomId}/files`);
+                const response = await axios.get(`http://localhost:5000/room/${roomId}/files`);
                 setFiles(response.data);
             } catch (err) {
                 setError(err);
