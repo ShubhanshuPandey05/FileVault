@@ -28,18 +28,16 @@ const findRoom = async (req, res) => {
 };
 
 const getFilesByRoomId = async (req, res) => {
-    // console.log("hiiiiiii");
     
     try {
         const { roomId } = req.params;
-        // console.log("Fetching files for Room ID:", roomId);
         const room = await Room.findOne({ roomId }).populate('files');
         if (!room) {
             console.log("Room not found for ID:", roomId);
             return res.status(404).json({ message: 'Room not found' });
         }
         const files = await Filee.find({
-            _id: { $in: room.files } // Find files whose _id is in the room's files array
+            _id: { $in: room.files }
         });
         
         res.json(files)

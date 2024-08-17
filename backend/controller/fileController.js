@@ -9,7 +9,7 @@ const ftpOptions = {
     host: process.env.FTP_HOST,
     user: process.env.FTP_USER,
     password: process.env.FTP_PASS,
-    secure: false,  // Set to true if using FTPS
+    secure: false, 
 };
 
 const uploadFile = async (req, res) => {
@@ -21,29 +21,23 @@ const uploadFile = async (req, res) => {
     }
 
     const client = new ftp.Client();
-    client.ftp.verbose = true;  // Enable verbose logging
+    client.ftp.verbose = true;
 
     try {
         const room = await Room.findOne({ roomId });
         if (!room) {
             return res.status(404).json({ error: 'Room not found' });
         }
-        // Connect to the FTP server
         await client.access(ftpOptions);
 
-        // Define the remote path where the file will be uploaded
         const remotePath = path.join(file.originalname);
 
-        // Create a readable stream from the file buffer
         const fileStream = new Readable();
-        fileStream._read = () => { }; // No-op
+        fileStream._read = () => { };
         fileStream.push(file.buffer);
         fileStream.push(null);
-
-        // Upload the file to the FTP server
         await client.uploadFrom(fileStream, remotePath);
 
-        // Generate the file URL
         const fileUrl = `https://theshubhanshu.com/FileVault/uploads/${file.originalname}`;
 
         const newFileData = {
