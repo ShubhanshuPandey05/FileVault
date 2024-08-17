@@ -5,17 +5,21 @@ import { toast, ToastContainer } from 'react-toastify';
 
 function Home() {
   const [roomId, setRoomId] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/room/create');
+      setLoading(true); 
+      const response = await axios.get('https://file-vault-psi.vercel.app/room/create');
       if (response.status === 201) {
         navigate(`/room/${response.data.roomId}`);
       } else {
         console.error('Failed to create room:', response.data);
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error('Error creating room:', error);
       toast('Error creating room')
     }
@@ -24,20 +28,30 @@ function Home() {
   const handleJoinRoom = async () => {
     if (roomId.trim()) {
       try {
-        const response = await axios.get(`http://localhost:5000/room/${roomId}`);
+        setLoading(true); 
+        const response = await axios.get(`https://file-vault-psi.vercel.app/room/${roomId}`);
         if (response.status === 200) {
           navigate(`/room/${roomId}`);
         } else {
           console.error('Room not found:', response.data);
           toast.error("Room not found")
         }
+        setLoading(false)
       } catch (error) {
+        setLoading(false)
         console.error('Error joining room:', error);
         toast.error('Error joining room')
 
       }
     }
   };
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <div class="loader"></div>
+      </div>
+    ); // Show loading message
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">

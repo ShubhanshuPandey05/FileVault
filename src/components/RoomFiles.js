@@ -9,17 +9,21 @@ import docIcon from './assets/docx-icon.png';
 import pptIcon from './assets/pptx-icon.png';
 import txtIcon from './assets/txt-icon.png';
 import xlsIcon from './assets/xlsx-icon.png';
-import fileIcon from './assets/file-icon.png'; 
+import fileIcon from './assets/file-icon.png';
 
 const RoomFiles = ({ roomId, files, setFiles }) => {
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/room/${roomId}/files`);
+                setLoading(true);
+                const response = await axios.get(`https://file-vault-psi.vercel.app/room/${roomId}/files`);
                 setFiles(response.data);
+                setLoading(false);
             } catch (err) {
+                setLoading(false);
                 setError(err);
                 console.error('Error fetching files:', err);
                 toast.error("Error fetching files");
@@ -54,6 +58,14 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
 
     if (error) {
         return <div className="text-red-500">Error: {error.message}</div>;
+    }
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+                <div class="loader"></div>
+            </div>
+        ); // Show loading message
     }
 
     return (

@@ -8,6 +8,7 @@ function Room() {
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -41,28 +42,39 @@ function Room() {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`http://localhost:5000/upload/${roomId}`, {
+      setLoading(true);
+      const response = await fetch(`https://file-vault-psi.vercel.app/upload/${roomId}`, {
         method: 'POST',
         body: formData,
       });
 
       const result = await response.json();
       if (response.ok) {
-        alert('File uploaded successfully!');
         setFiles((prevFiles) => [...prevFiles, result]);
+        toast.success("File Uploaded...")
       } else {
         toast.error(result.error);
       }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error('Error uploading file:', error);
       toast.error('Error uploading file')
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <div class="loader"></div>
+      </div>
+    )// Show loading message
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">Room ID: {roomId}</h1>
-      
+
       <div
         className={`border-2 border-dashed border-gray-300 rounded-lg p-10 w-full max-w-2xl text-center ${dragOver ? 'bg-gray-200' : 'bg-white'}`}
         onDrop={handleFileDrop}
