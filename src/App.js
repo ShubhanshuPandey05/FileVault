@@ -8,8 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <>
-    <ToastContainer/>
       <Router>
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/room/:roomId" element={<Room />} />

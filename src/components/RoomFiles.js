@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 // Import icons or placeholders for non-image files
 import pdfIcon from './assets/pdf-icon.png';
@@ -10,20 +10,18 @@ import pptIcon from './assets/pptx-icon.png';
 import txtIcon from './assets/txt-icon.png';
 import xlsIcon from './assets/xlsx-icon.png';
 import fileIcon from './assets/file-icon.png';
+import videoIcon from './assets/mp4-icon.png';
+import audioIcon from './assets/mp3-icon.png';
 
 const RoomFiles = ({ roomId, files, setFiles }) => {
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                setLoading(true);
                 const response = await axios.get(`https://file-vault-psi.vercel.app/room/${roomId}/files`);
                 setFiles(response.data);
-                setLoading(false);
             } catch (err) {
-                setLoading(false);
                 setError(err);
                 console.error('Error fetching files:', err);
                 toast.error("Error fetching files");
@@ -34,45 +32,50 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
 
     // Function to determine the correct icon or image to display
     const getFilePreview = (file) => {
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'];
+        const videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'webm', 'flv', 'wmv'];
+        const audioExtensions = ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a', 'wma', 'aiff', 'alac'];
         const fileExtension = file.filename.split('.').pop().toLowerCase();
 
         if (imageExtensions.includes(fileExtension)) {
-            return file.url; // Return the image URL for image files
+            return file.url; 
         } else if (fileExtension === 'pdf') {
-            return pdfIcon; // Return the PDF icon
+            return pdfIcon; 
         } else if (fileExtension === 'zip' || fileExtension === 'rar') {
-            return zipIcon; // Return the ZIP icon
+            return zipIcon; 
         } else if (fileExtension === 'doc' || fileExtension === 'docx') {
-            return docIcon; // Return the DOCX icon
+            return docIcon; 
         } else if (fileExtension === 'ppt' || fileExtension === 'pptx') {
-            return pptIcon; // Return the PPTX icon
+            return pptIcon; 
         } else if (fileExtension === 'txt') {
-            return txtIcon; // Return the TXT icon
+            return txtIcon; 
         } else if (fileExtension === 'xls' || fileExtension === 'xlsx') {
-            return xlsIcon; // Return the XLSX icon
+            return xlsIcon; 
+        } else if (audioExtensions.includes(fileExtension)) {
+            return audioIcon; 
+        } else if (videoExtensions.includes(fileExtension)) {
+            return videoIcon; 
         } else {
-            return fileIcon; // Return a generic file icon for unknown formats
+            return fileIcon; 
         }
     };
 
     if (error) {
-        return <div className="text-red-500">Error: {error.message}</div>;
-    }
-
-    if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-                <div class="loader"></div>
+            <div>
+                <ToastContainer />
+
+                <div className="text-red-500">Error: {error.message}</div>
             </div>
-        ); // Show loading message
+        );
     }
 
     return (
         <div className="mt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <ToastContainer />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10 overflow-auto w-full">
                 {files.map((file, index) => (
-                    <div key={index} className="relative group flex flex-col justify-center items-center">
+                    <div key={index} className="relative group flex flex-col justify-center items-center card p-4">
                         <img
                             src={getFilePreview(file)}
                             alt={file.filename}
@@ -88,7 +91,7 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
                                 Download
                             </a>
                         </div>
-                        <div className="mt-2 text-center text-sm text-gray-600">
+                        <div className="mt-2 text-center text-sm text-white">
                             {file.filename}
                         </div>
                     </div>

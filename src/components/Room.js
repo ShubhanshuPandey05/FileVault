@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import RoomFiles from './RoomFiles';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import copyIcon from './assets/copy-icon.png'
 
 function Room() {
   const { roomId } = useParams();
@@ -34,7 +35,7 @@ function Room() {
 
   const handleFileUpload = async () => {
     if (!file) {
-      alert('Please select a file to upload.');
+      toast.error('Please select a file to upload.');
       return;
     }
 
@@ -50,38 +51,61 @@ function Room() {
 
       const result = await response.json();
       if (response.ok) {
-        setFiles((prevFiles) => [...prevFiles, result]);
         toast.success("File Uploaded...")
+        setFiles((prevFiles) => [...prevFiles, result]);
+        setLoading(false)
       } else {
         toast.error(result.error);
+        setLoading(false)
       }
-      setLoading(false)
+
     } catch (error) {
+      toast.error('Error uploading file')
       setLoading(false)
       console.error('Error uploading file:', error);
-      toast.error('Error uploading file')
     }
+  };
+  const handleCopy = () => {
+    navigator.clipboard.writeText(roomId)
+      .then(() => {
+        toast.success('Room ID copied!');// Clear success message after 2 seconds
+      })
+      .catch(() => {
+        toast.error('Failed to copy!');
+      });
   };
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-        <div class="loader"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen card p-6">
+        <ToastContainer />
+        <div className="loader"></div>
       </div>
     )// Show loading message
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">Room ID: {roomId}</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen card p-6">
+      
+      <ToastContainer />
+      <h1 className="text-3xl font-bold mb-6 text-white">Room ID: {roomId}
+        <button
+          onClick={handleCopy}
+        >
+          <img src={copyIcon} alt="" className='w-6 ml-2' />
+        </button>
+      </h1>
+      <p className='text-red-500 mb-5'>
+        Make sure to copy the Room ID for future access. You won't be able to access this room without it!
+      </p>
 
       <div
-        className={`border-2 border-dashed border-gray-300 rounded-lg p-10 w-full max-w-2xl text-center ${dragOver ? 'bg-gray-200' : 'bg-white'}`}
+        className={`border-2 border-dashed border-gray-300 rounded-lg p-10 w-full max-w-2xl text-center bg-opacity-50 ${dragOver ? 'bg-[rgba(209,213,219,0.64)]' : 'bg-[rgba(255,255,255,0.25)]'}`}
         onDrop={handleFileDrop}
         onDragOver={handleFileDragOver}
         onDragLeave={handleFileDragLeave}
       >
-        <p className="text-gray-600 mb-2">Drag & Drop your file here or</p>
+        <p className="text-white mb-2">Drag & Drop your file here or</p>
         <input
           type="file"
           onChange={handleFileChange}
@@ -92,7 +116,7 @@ function Room() {
           Browse Files
         </label>
         {file && (
-          <p className="mt-4 text-gray-800 font-semibold">
+          <p className="mt-4 text-white font-semibold">
             Selected file: {file.name}
           </p>
         )}
@@ -105,9 +129,9 @@ function Room() {
         Upload File
       </button>
 
-      <h2 className="text-2xl font-semibold mb-4">Files in this Room</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-white">Files in this Room</h2>
       <RoomFiles roomId={roomId} files={files} setFiles={setFiles} />
-      <button className='px-5 py-2 border-2 rounded-lg bg-red-500 text-white m-20 hover:bg-red-600'>
+      <button className='px-5 py-2 rounded-lg bg-red-500 text-white m-20 hover:bg-red-600'>
         <Link to="/">Go Home</Link>
       </button>
     </div>

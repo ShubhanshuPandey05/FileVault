@@ -13,15 +13,18 @@ function Home() {
       setLoading(true); 
       const response = await axios.get('https://file-vault-psi.vercel.app/room/create');
       if (response.status === 201) {
+        setLoading(false)
         navigate(`/room/${response.data.roomId}`);
       } else {
+        setLoading(false)
+        toast.error("Failed to create room:")
         console.error('Failed to create room:', response.data);
       }
-      setLoading(false)
+      
     } catch (error) {
       setLoading(false)
       console.error('Error creating room:', error);
-      toast('Error creating room')
+      toast.error('Error creating room')
     }
   };
 
@@ -31,12 +34,13 @@ function Home() {
         setLoading(true); 
         const response = await axios.get(`https://file-vault-psi.vercel.app/room/${roomId}`);
         if (response.status === 200) {
+          setLoading(false)
           navigate(`/room/${roomId}`);
         } else {
+          setLoading(false)
           console.error('Room not found:', response.data);
           toast.error("Room not found")
         }
-        setLoading(false)
       } catch (error) {
         setLoading(false)
         console.error('Error joining room:', error);
@@ -47,16 +51,17 @@ function Home() {
   };
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-        <div class="loader"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen card p-6">
+      <ToastContainer/>
+        <div className="loader"></div>
       </div>
     ); // Show loading message
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen card p-6">
       <ToastContainer/>
-      <h1 className="text-4xl font-bold mb-6">FileVault</h1>
+      <h1 className="text-4xl font-bold mb-6 text-white">FileVault</h1>
       <button
         onClick={handleCreateRoom}
         className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
