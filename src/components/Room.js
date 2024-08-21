@@ -68,7 +68,7 @@ function Room() {
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId)
       .then(() => {
-        toast.success('Room ID copied!');// Clear success message after 2 seconds
+        toast.success('Room ID copied!');
       })
       .catch(() => {
         toast.error('Failed to copy!');
@@ -81,7 +81,7 @@ function Room() {
         <ToastContainer />
         <div className="loader"></div>
       </div>
-    )// Show loading message
+    )
   }
 
   return (
