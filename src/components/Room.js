@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import RoomFiles from './RoomFiles';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import copyIcon from './assets/copy-icon.png'
 
 function Room() {
