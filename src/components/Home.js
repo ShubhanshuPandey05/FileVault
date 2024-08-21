@@ -52,7 +52,6 @@ function Home() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen card p-6">
-      <ToastContainer/>
         <div className="loader"></div>
       </div>
     ); // Show loading message
@@ -60,7 +59,6 @@ function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen card p-6">
-      <ToastContainer/>
       <h1 className="text-4xl font-bold mb-6 text-white">FileVault</h1>
       <button
         onClick={handleCreateRoom}

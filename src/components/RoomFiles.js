@@ -63,7 +63,6 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
     if (error) {
         return (
             <div>
-                <ToastContainer />
 
                 <div className="text-red-500">Error: {error.message}</div>
             </div>
@@ -72,7 +71,7 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
 
     return (
         <div className="mt-6">
-            <ToastContainer />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10 overflow-auto w-full">
                 {files.map((file, index) => (
                     <div key={index} className="relative group flex flex-col justify-center items-center card p-4">

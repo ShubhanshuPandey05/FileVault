@@ -78,7 +78,7 @@ function Room() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen card p-6">
-        <ToastContainer />
+
         <div className="loader"></div>
       </div>
     )
@@ -87,7 +87,7 @@ function Room() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen card p-6">
       
-      <ToastContainer />
+
       <h1 className="text-3xl font-bold mb-6 text-white">Room ID: {roomId}
         <button
           onClick={handleCopy}

@@ -7,13 +7,7 @@ const downloadRoute = require('./routes/download.js');
 const roomRoute = require('./routes/room.js');
 const port = process.env.PORT || 8001;
 const app = express();
-const corsOptions = {
-    origin: 'https://filevault.theshubhanshu.com',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -30,11 +24,11 @@ db.once('open', () => {
 
 app.use('/upload', uploadRoute);
 app.use('/download', downloadRoute);
-app.use('/room', roomRoute)
+app.use('/room',roomRoute)
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
-});
+  });
 
 
 app.listen(port, () => {
