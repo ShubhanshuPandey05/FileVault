@@ -19,7 +19,7 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await axios.get(`https://file-vault-psi.vercel.app/room/${roomId}/files`);
+                const response = await axios.get(`https://filevault-plyk.onrender.com/room/${roomId}/files`);
                 setFiles(response.data);
             } catch (err) {
                 setError(err);

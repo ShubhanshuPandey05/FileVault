@@ -44,7 +44,7 @@ function Room() {
 
     try {
       setLoading(true);
-      const response = await fetch(`https://file-vault-psi.vercel.app/upload/${roomId}`, {
+      const response = await fetch(`https://filevault-plyk.onrender.com/upload/${roomId}`, {
         method: 'POST',
         body: formData,
       });

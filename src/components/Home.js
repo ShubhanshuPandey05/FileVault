@@ -11,7 +11,7 @@ function Home() {
   const handleCreateRoom = async () => {
     try {
       setLoading(true); 
-      const response = await axios.get('https://file-vault-psi.vercel.app/room/create');
+      const response = await axios.get('https://filevault-plyk.onrender.com/room/create');
       if (response.status === 201) {
         setLoading(false)
         navigate(`/room/${response.data.roomId}`);
@@ -32,7 +32,7 @@ function Home() {
     if (roomId.trim()) {
       try {
         setLoading(true); 
-        const response = await axios.get(`https://file-vault-psi.vercel.app/room/${roomId}`);
+        const response = await axios.get(`https://filevault-plyk.onrender.com/room/${roomId}`);
         if (response.status === 200) {
           setLoading(false)
           navigate(`/room/${roomId}`);
