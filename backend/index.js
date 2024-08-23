@@ -30,6 +30,9 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong!');
   });
 
+app.get("/",(req,res)=>{
+    res.send("This is FileVault API")
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
