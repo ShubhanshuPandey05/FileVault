@@ -30,6 +30,19 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
         fetchFiles();
     }, [roomId, setFiles]);
 
+    const generateTempUrl = async (fileId) => {
+        try {
+            const response = await axios.get(`https://filevault-plyk.onrender.com/temp/generate-temp-url/${fileId}`);
+            navigator.clipboard.writeText(response.data.tempUrl).then(() => {
+                toast.success('File LInk copied!');
+              })
+              .catch(() => {
+                toast.error('Failed to copy!');
+              });
+        } catch (error) {
+            console.error('Failed to generate temporary URL:', error);
+        }
+    };
     // Function to determine the correct icon or image to display
     const getFilePreview = (file) => {
         const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'];
@@ -38,25 +51,25 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
         const fileExtension = file.filename.split('.').pop().toLowerCase();
 
         if (imageExtensions.includes(fileExtension)) {
-            return file.url; 
+            return file.url;
         } else if (fileExtension === 'pdf') {
-            return pdfIcon; 
+            return pdfIcon;
         } else if (fileExtension === 'zip' || fileExtension === 'rar') {
-            return zipIcon; 
+            return zipIcon;
         } else if (fileExtension === 'doc' || fileExtension === 'docx') {
-            return docIcon; 
+            return docIcon;
         } else if (fileExtension === 'ppt' || fileExtension === 'pptx') {
-            return pptIcon; 
+            return pptIcon;
         } else if (fileExtension === 'txt') {
-            return txtIcon; 
+            return txtIcon;
         } else if (fileExtension === 'xls' || fileExtension === 'xlsx') {
-            return xlsIcon; 
+            return xlsIcon;
         } else if (audioExtensions.includes(fileExtension)) {
-            return audioIcon; 
+            return audioIcon;
         } else if (videoExtensions.includes(fileExtension)) {
-            return videoIcon; 
+            return videoIcon;
         } else {
-            return fileIcon; 
+            return fileIcon;
         }
     };
 
@@ -81,7 +94,7 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
                             className="w-full h-32 object-cover rounded-md"
                             style={{ objectFit: 'cover', width: '150px', height: '150px' }}
                         />
-                        <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex flex-col space-y-5 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <a
                                 href={file.url}
                                 download
@@ -89,6 +102,12 @@ const RoomFiles = ({ roomId, files, setFiles }) => {
                             >
                                 Download
                             </a>
+                            <p
+                                className="text-white font-semibold text-sm hover:underline cursor-pointer"
+                                onClick={() => generateTempUrl(file._id)}
+                            >
+                                Copy Link
+                            </p>
                         </div>
                         <div className="mt-2 text-center text-sm text-white">
                             {file.filename}

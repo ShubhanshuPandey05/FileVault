@@ -5,6 +5,7 @@ require('dotenv').config();
 const uploadRoute = require('./routes/upload.js');
 const downloadRoute = require('./routes/download.js');
 const roomRoute = require('./routes/room.js');
+const tempRoute = require('./routes/temp.js');
 const port = process.env.PORT || 8001;
 const app = express();
 app.use(cors());
@@ -23,8 +24,9 @@ db.once('open', () => {
 })
 
 app.use('/upload', uploadRoute);
-app.use('/download', downloadRoute);
+app.use('/copyLink', downloadRoute);
 app.use('/room',roomRoute)
+app.use('/temp',tempRoute)
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
