@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const File = require('../models/File');
+const File = require('../models/File.js');
 
 const TEMP_URL_EXPIRY = 0.5* 60 * 1000; // 1 hour in milliseconds
 

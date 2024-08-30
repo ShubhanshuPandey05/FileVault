@@ -1,4 +1,4 @@
-const File = require("../models/File");
+const File = require("../models/File.js");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");

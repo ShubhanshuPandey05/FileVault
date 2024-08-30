@@ -1,6 +1,6 @@
 const express = require('express');
-const  { getfile } = require('../controller/tempUrlAccess');
-const { generateTempUrl } = require('../controller/tempUrlGenerate');
+const  { getfile } = require('../controller/tempUrlAccess.js');
+const { generateTempUrl } = require('../controller/tempUrlGenerate.js');
 const router = express.Router();
 
 router.get('/:fileId',getfile);
