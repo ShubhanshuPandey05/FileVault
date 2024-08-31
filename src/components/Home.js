@@ -5,33 +5,56 @@ import { toast } from 'react-toastify';
 
 function Home() {
   const [roomId, setRoomId] = useState('');
+  const [newRoomId, setNewRoomId] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCreateRoom = async () => {
     try {
-      setLoading(true); 
-      const response = await axios.get('https://filevault-plyk.onrender.com/room/create');
+      setLoading(true);
+  
+      const response = await axios.post('https://filevault-plyk.onrender.com/room/create', {
+        roomId: newRoomId
+      });
+  
       if (response.status === 201) {
-        setLoading(false)
         navigate(`/room/${response.data.roomId}`);
       } else {
-        setLoading(false)
-        toast.error("Failed to create room:")
+        console.log("1");
+        
+        toast.error(response.data || 'Failed to create room');
         console.error('Failed to create room:', response.data);
       }
-      
+  
     } catch (error) {
-      setLoading(false)
+      console.log("2");
       console.error('Error creating room:', error);
-      toast.error('Error creating room')
+  
+      if (error.response) {
+        console.log("3");
+        console.log(error.response);
+        
+        // Server responded with a status code outside the 2xx range
+        toast.error(error.response.data || 'Failed to create room');
+      } else if (error.request) {
+        console.log("4");
+        
+        // Request was made but no response was received
+        toast.error('No response from server');
+      } else {
+        // Something happened in setting up the request
+        toast.error('Error in setting up the request');
+      }
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const handleJoinRoom = async () => {
     if (roomId.trim()) {
       try {
-        setLoading(true); 
+        setLoading(true);
         const response = await axios.get(`https://filevault-plyk.onrender.com/room/${roomId}`);
         if (response.status === 200) {
           setLoading(false)
@@ -60,9 +83,16 @@ function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen card p-6">
       <h1 className="text-4xl font-bold mb-6 text-white">FileVault</h1>
+      <input
+        type="text"
+        value={newRoomId}
+        onChange={(e) => setNewRoomId(e.target.value)}
+        placeholder="Enter Room ID"
+        className="border border-gray-300 rounded-lg px-4 py-2 w-64 m-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
       <button
         onClick={handleCreateRoom}
-        className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+        className="bg-blue-500 text-white font-semibold py-2 mb-5 px-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
       >
         Create a Room
       </button>

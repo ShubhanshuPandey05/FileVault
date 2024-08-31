@@ -2,15 +2,26 @@ const Filee = require('../models/File.js');
 const Room = require('../models/Room.js');
 
 const createRoom = async (req, res) => {
-    const roomId = Math.random().toString(36).substring(2, 9);
+    const { roomId } = req.body;
+
     try {
+        // Asynchronously find if the room already exists
+        const check = await Room.findOne({ roomId });
+
+        if (check) {
+            return res.status(400).json("Room already exists" );
+        }
+
+        // Create and save the new room
         const room = new Room({ roomId });
         await room.save();
+
         res.status(201).json(room);
     } catch (error) {
         res.status(500).json({ error: 'Failed to create room' });
     }
 };
+
 
 const findRoom = async (req, res) => {
     console.log("Fetching room with ID:", req.params.roomId);
