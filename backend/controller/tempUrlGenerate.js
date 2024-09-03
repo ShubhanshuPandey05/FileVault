@@ -31,7 +31,7 @@ const generateTempUrl = async (req, res) => {
         
         // Generate the temporary URL
         // console.log(token);
-        const tempUrl = `https://filevault-jsrprime.onrender.com/temp/${fileId}?token=${token}`;
+        const tempUrl = `https://filevault-plyk.onrender.com/temp/${fileId}?token=${token}`;
         res.json({ tempUrl });
     } catch (err) {
         res.status(500).json({ error: 'Failed to generate temporary URL' });
