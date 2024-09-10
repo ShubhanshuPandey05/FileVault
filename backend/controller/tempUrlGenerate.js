@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const File = require('../models/File.js');
 
-const TEMP_URL_EXPIRY = 2 * 60 * 60 * 1000; // 1 hour in milliseconds
+const TEMP_URL_EXPIRY = 0.5 * 60 * 60 * 1000; // 1 hour in milliseconds
 
 const generateTempUrl = async (req, res) => {
     const { fileId } = req.params;
