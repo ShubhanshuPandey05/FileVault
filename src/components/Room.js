@@ -3,6 +3,10 @@ import { Link, useParams } from 'react-router-dom';
 import RoomFiles from './RoomFiles';
 import { toast } from 'react-toastify';
 import copyIcon from './assets/copy-icon.png'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+
 
 function Room() {
   const { roomId } = useParams();
@@ -10,6 +14,8 @@ function Room() {
   const [files, setFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -45,6 +51,7 @@ function Room() {
     try {
       setLoading(true);
       const response = await fetch(`https://filevault-plyk.onrender.com/upload/${roomId}`, {
+      // const response = await fetch(`http://localhost:5000/upload/${roomId}`, {
         method: 'POST',
         body: formData,
       });
@@ -54,6 +61,7 @@ function Room() {
         toast.success("File Uploaded...")
         setFiles((prevFiles) => [...prevFiles, result]);
         setLoading(false)
+        setFile(null);
       } else {
         toast.error(result.error);
         setLoading(false)
@@ -74,6 +82,57 @@ function Room() {
         toast.error('Failed to copy!');
       });
   };
+  
+  const roomDelete = async()=>{
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm(`Are you sure you want to delete this ${roomId} Room?`);
+
+    if (isConfirmed) {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://filevault-plyk.onrender.com/delete/room/${roomId}`, {
+        // const response = await fetch(`http://localhost:5000/delete/room/${roomId}`, {
+          method: 'DELETE',
+          });
+          if (response.status === 200) {
+            navigate(`/`);
+            toast.success("Room Deleted...")
+          }
+          setLoading(false)
+    }catch(error){
+      setLoading(false)
+
+      toast.error('Error deleting room')
+      console.log(error);
+      
+    }
+  }
+}
+
+  const handleDelete = async (fileId) => {
+    console.log('Attempting to delete file with ID:', fileId);
+
+    // eslint-disable-next-line no-restricted-globals
+    const isConfirmed = confirm("Are you sure you want to delete this file?");
+
+
+    if (isConfirmed) {
+      try {
+        const response = await axios.delete(`https://filevault-plyk.onrender.com/delete/${fileId}?roomId=${roomId}`);
+        // const response = await axios.delete(`http://localhost:5000/delete/${fileId}?roomId=${roomId}`);
+        if (response.status === 201) {  // Changed to 200
+          setFiles(files.filter((file) => file._id !== fileId)); // Update files list
+          toast.success("File Deleted Successfully");
+        } else {
+          toast.error(response.data.message || "Failed to delete file"); // Handle any non-200 responses
+        }
+      } catch (error) {
+        toast.error("Error deleting file");
+        console.log("Error:", error.response ? error.response.data : error.message); // Log detailed error if available
+      }
+    }
+  };
+
 
   if (loading) {
     return (
@@ -86,15 +145,21 @@ function Room() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen card p-6">
-      
-
-      <h1 className="text-3xl font-bold mb-6 text-white">Room ID: {roomId}
-        <button
-          onClick={handleCopy}
-        >
-          <img src={copyIcon} alt="" className='w-6 ml-2' />
-        </button>
-      </h1>
+      <div>
+        <h1 className="text-3xl font-bold mb-6 text-white flex lg:space-x-20 flex-col lg:flex-row">
+          <div>
+            Room ID : {roomId}
+            <button
+              onClick={handleCopy}
+            >
+              <img src={copyIcon} alt="" className='w-6 ml-2' />
+            </button>
+          </div>
+          <div onClick={()=>roomDelete()} className='bg-red-600 text-sm rounded-full m-auto text-white mt-5 lg:mt-0 h-9 px-4 flex cursor-pointer justify-center items-center transition-transform transform  '>
+            Delete Room
+          </div>
+        </h1>
+      </div>
       <p className='text-red-500 mb-5'>
         Make sure to copy the Room ID for future access. You won't be able to access this room without it!
       </p>
@@ -130,7 +195,7 @@ function Room() {
       </button>
 
       <h2 className="text-2xl font-semibold mb-4 text-white">Files in this Room</h2>
-      <RoomFiles roomId={roomId} files={files} setFiles={setFiles} />
+      <RoomFiles roomId={roomId} files={files} setFiles={setFiles} handleDelete={handleDelete} />
       <button className='px-5 py-2 rounded-lg bg-red-500 text-white m-20 hover:bg-red-600'>
         <Link to="/">Go Home</Link>
       </button>

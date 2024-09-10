@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const uploadRoute = require('./routes/upload.js');
+const deleteRoute = require('./routes/delete.js');
 const downloadRoute = require('./routes/download.js');
 const roomRoute = require('./routes/room.js');
 const tempRoute = require('./routes/temp.js');
@@ -24,6 +25,7 @@ db.once('open', () => {
 })
 
 app.use('/upload', uploadRoute);
+app.use('/delete', deleteRoute);
 app.use('/copyLink', downloadRoute);
 app.use('/room',roomRoute)
 app.use('/temp',tempRoute)

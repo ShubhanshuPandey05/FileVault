@@ -6,7 +6,7 @@ const fileSchema = new mongoose.Schema({
   roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
   tempToken: String,
   tempTokenExpiry: String,
-});
+}, { timestamps: true });
 
 const File = mongoose.model('File', fileSchema);
 module.exports = File;
